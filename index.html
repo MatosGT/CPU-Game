@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU & Motherboard Lab — Simulador Completo de Arquitetura</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>CPU & Motherboard Lab</h1>
+        <div class="stats">
+            <span>Pontuação: <strong id="score">0</strong></span>
+            <span>Progresso: <strong id="progress-count">0/6</strong></span>
+        </div>
+    </header>
+
+    <main class="workspace">
+        <!-- Painel Esquerdo: Componentes e Ligações -->
+        <aside class="inventory">
+            <h2>1. Peças & Ligações</h2>
+            <p class="hint">Arrasta (ou clica para selecionar) o componente e coloca-o no slot certo da motherboard.</p>
+            <div id="parts-list" class="parts-container"></div>
+            <div class="controls">
+                <button id="btn-rotate" class="btn secondary" type="button">Rodar CPU (90°)</button>
+                <button id="btn-reset" class="btn danger" type="button">Reiniciar</button>
+            </div>
+        </aside>
+
+        <!-- Centro: Motherboard Interativa -->
+        <section class="board-area">
+            <div class="motherboard" id="motherboard">
+                <!-- EPS 8-Pin Power -->
+                <div class="slot eps-power" data-target="eps" id="slot-eps">
+                    <span class="label">CPU PWR (EPS 8-PIN)</span>
+                </div>
+
+                <!-- Socket CPU -->
+                <div class="slot cpu-socket" data-target="cpu" id="slot-cpu">
+                    <span class="label">SOCKET LGA 1700</span>
+                    <div class="triangle-marker" title="Alinhar triângulo dourado aqui"></div>
+                    <div class="retention-lever" id="cpu-lever" title="Clica para trancar após inserir"></div>
+                </div>
+
+                <!-- Slots RAM -->
+                <div class="slot ram-slots" data-target="ram" id="slot-ram">
+                    <span class="label">DIMM A2 / B2<br>(Dual-Channel)</span>
+                </div>
+
+                <!-- ATX 24-Pin Power -->
+                <div class="slot atx-power" data-target="atx" id="slot-atx">
+                    <span class="label">ATX 24-PIN<br>(Board & Chipset)</span>
+                </div>
+
+                <!-- M.2 NVMe -->
+                <div class="slot m2-slot" data-target="nvme" id="slot-m2">
+                    <span class="label">M.2_1 (4x PCIe CPU Direct)</span>
+                </div>
+
+                <!-- PCIe x16 -->
+                <div class="slot pcie-slot" data-target="gpu" id="slot-pcie">
+                    <span class="label">PCIe 5.0 x16 (16x CPU Lanes)</span>
+                </div>
+
+                <!-- Chipset / PCH (Bloco Informativo Clicável) -->
+                <div class="chipset-block" id="chipset-btn" title="Clica para estudar o Chipset e barramento DMI">
+                    <span>CHIPSET (PCH)<br><small>USB / SATA / Rede</small></span>
+                </div>
+
+                <!-- Trilhas de Barramento -->
+                <svg class="traces" viewBox="0 0 620 520">
+                    <path id="trace-ram" d="M 270 175 L 385 175" />
+                    <path id="trace-m2" d="M 240 235 L 240 280 L 315 280" />
+                    <path id="trace-pcie" d="M 195 235 L 195 340" />
+                    <path id="trace-dmi" d="M 270 220 L 420 410" />
+                    <text x="330" y="325" class="bus-label">Barramento DMI</text>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Painel Direito: Diagnóstico + Toda a Matéria -->
+        <aside class="telemetry">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="tab-diag" type="button">Diagnóstico</button>
+                <button class="tab-btn" data-tab="tab-theory" type="button">Matéria Completa</button>
+            </div>
+
+            <div id="tab-diag" class="tab-content active">
+                <div id="feedback-box" class="feedback info">
+                    Começa por alinhar o triângulo dourado da <strong>CPU</strong> (roda a 0°) e coloca-a no <strong>Socket LGA</strong>.
+                </div>
+                <div class="bus-info">
+                    <h3>Estado dos Barramentos & Energia</h3>
+                    <ul>
+                        <li id="status-cpu">🔴 Socket CPU: Vazio</li>
+                        <li id="status-eps">🔴 Alimentação VRM (EPS 8-Pin): Desligada</li>
+                        <li id="status-atx">🔴 Alimentação Geral (ATX 24-Pin): Desligada</li>
+                        <li id="status-ram">🔴 Controlador de Memória (IMC): Inativo</li>
+                        <li id="status-m2">🔴 Barramento NVMe (4x Lanes): Sem disco</li>
+                        <li id="status-pcie">🔴 Barramento PCIe x16 (16x Lanes): Vazio</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="tab-theory" class="tab-content hidden">
+                <div class="topic-pills" id="topic-pills"></div>
+                <div id="theory-viewer" class="theory-card"></div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Modal de Quiz Final -->
+    <div id="quiz-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="quiz-header">
+                <h2>Avaliação Final de Arquitetura</h2>
+                <span id="quiz-step">Pergunta 1 de 4</span>
+            </div>
+            <p id="quiz-question" class="quiz-q"></p>
+            <div id="quiz-options" class="quiz-options"></div>
+            <p id="quiz-feedback" class="quiz-fb"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
